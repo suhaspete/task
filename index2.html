@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoppie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Products</h1>
+    <ul id="product-list"></ul>
+    <button id="add-to-cart-btn">Add to cart</button>
+    <script>
+        // Fetch products from the backend
+        fetch('/products')
+            .then(response => response.json())
+            .then(products => {
+                // Display the products in the UI
+                const productList = document.getElementById('product-list');
+                products.forEach(product => {
+                    const li = document.createElement('li');
+                    li.textContent = `${product.name} (${product.price})`;
+                    productList.appendChild(li);
+                });
+            });
+
+        // Add a product to the cart
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: 1,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Product added to cart:', data);
+            });
+        });
+    </script>
+</body>
+</html>
